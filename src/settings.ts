@@ -5,11 +5,15 @@ import Vimium from "./main";
 export interface VimiumSettings {
 	clickableCssSelector: string;
 	markerSize: number;
+	useBackspaceToHideMarkers: boolean;
+	keysForHidingMarkers: Array<string>;
 }
 
 export const DEFAULT_SETTINGS: VimiumSettings = {
 	clickableCssSelector: CLICKABLE_SELECTOR,
 	markerSize: 12,
+	useBackspaceToHideMarkers: false,
+	keysForHidingMarkers: ['Escape'],
 }
 
 export class VimiumSettingTab extends PluginSettingTab {
@@ -55,6 +59,32 @@ export class VimiumSettingTab extends PluginSettingTab {
 			.setTooltip("Reset settings")
 			.onClick(async () => {
 				this.plugin.settings.clickableCssSelector = CLICKABLE_SELECTOR;
+				await this.plugin.saveSettings();
+				this.display();
+			});
+
+		new Setting(containerEl)
+			.setName("Use backsapce to hide markers")
+			.setDesc("When enabled, pressing backspace will hide markers when no input is in the buffer.")
+			.addToggle(toggle => toggle
+				.setValue(this.plugin.settings.useBackspaceToHideMarkers)
+				.onChange(async (value) => {
+					this.plugin.settings.useBackspaceToHideMarkers = value;
+					if (value) {
+						this.plugin.settings.keysForHidingMarkers.push('Backspace')
+					}
+					else {
+						this.plugin.settings.keysForHidingMarkers.pop()
+					}
+					await this.plugin.saveSettings();
+				}));
+
+		new ButtonComponent(containerEl)
+			.setButtonText("Reset")
+			.setTooltip("Reset settings")
+			.onClick(async () => {
+				this.plugin.settings.useBackspaceToHideMarkers = DEFAULT_SETTINGS.useBackspaceToHideMarkers;
+				this.plugin.settings.keysForHidingMarkers = DEFAULT_SETTINGS.keysForHidingMarkers;
 				await this.plugin.saveSettings();
 				this.display();
 			});
