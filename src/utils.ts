@@ -55,9 +55,9 @@ export function findMarkerMatch(text: string, markers: MarkerData[]): MarkerData
 	return null;
 }
 
-export function isMarkerMatchAt(key: string, markers: MarkerData[], index: number): boolean {
+export function isMarkerMatchAt(key: string, markers: MarkerData[]): boolean {
 	for (const marker of markers) {
-		if (key === marker.text[index]) {
+		if (marker.text.startsWith(key)) {
 			return true;
 		}
 	}

@@ -59,7 +59,7 @@ export default class Vimium extends Plugin {
 					this.showMarkers = false;
 					this.destroyMarkers();
 					this.input = "";
-				} else if (isMarkerMatchAt(this.input, this.markers, this.input.length - 1)) {
+				} else if (isMarkerMatchAt(this.input, this.markers)) {
 					this.updateMarkers();
 				} else {
 					this.showMarkers = false;
